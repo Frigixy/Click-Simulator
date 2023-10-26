@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Clic</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        #container {
+            position: relative;
+            z-index: 1;
+        }
+        #clickButton, #buyButton, #buyAutoClickButton, #rickrollButton, #saveButton, #loadButton {
+            font-size: 24px;
+            padding: 10px 20px;
+            margin: 10px;
+        }
+        #score {
+            font-size: 48px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Jeux de Clic</h1>
+        <p>Cliquez sur le bouton ci-dessous pour marquer des points :</p>
+        <button id="clickButton">Cliquez ici</button>
+        <p>Points: <span id="score">0</span></p>
+        <button id="buyButton">Acheter Booster (10 points)</button>
+        <button id="buyAutoClickButton">Acheter Auto-Click (100 points)</button>
+        <button id="rickrollButton">Rickroll</button>
+        <button id="saveButton">Sauvegarder</button>
+        <button id="loadButton">Charger</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let multiplier = 1;
+        let boosterCost = 10;
+        let autoClickCost = 100;
+        let autoClickInterval;
+
+        document.getElementById('clickButton').addEventListener('click', function() {
+            score += multiplier;
+            document.getElementById('score').innerText = score;
+        });
+
+        document.getElementById('buyButton').addEventListener('click', function() {
+            if (score >= boosterCost) {
+                score -= boosterCost;
+                multiplier *= 2;
+                boosterCost *= 2; // Le coût du booster double
+                document.getElementById('score').innerText = score;
+                document.getElementById('buyButton').textContent = `Acheter Booster (${boosterCost} points)`;
+            } else {
+                alert("Vous n'avez pas assez de points pour acheter le booster.");
+            }
+        });
+
+        document.getElementById('buyAutoClickButton').addEventListener('click', function() {
+            if (score >= autoClickCost) {
+                score -= autoClickCost;
+                autoClickCost *= 2; // Le coût de l'Auto-Click double
+                document.getElementById('score').innerText = score;
+                startAutoClick();
+                document.getElementById('buyAutoClickButton').textContent = `Acheter Auto-Click (${autoClickCost} points)`;
+            } else {
+                alert("Vous n'avez pas assez de points pour acheter l'Auto-Click.");
+            }
+        });
+
+        document.getElementById('rickrollButton').addEventListener('click', function() {
+            window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+        });
+
+        document.getElementById('saveButton').addEventListener('click', function() {
+            // Sauvegarde les données dans le stockage local (localStorage)
+            localStorage.setItem('score', score);
+            localStorage.setItem('multiplier', multiplier);
+            localStorage.setItem('boosterCost', boosterCost);
+            localStorage.setItem('autoClickCost', autoClickCost);
+        });
+
+        document.getElementById('loadButton').addEventListener('click', function() {
+            // Charge les données depuis le stockage local (localStorage)
+            score = parseInt(localStorage.getItem('score')) || 0;
+            multiplier = parseInt(localStorage.getItem('multiplier')) || 1;
+            boosterCost = parseInt(localStorage.getItem('boosterCost')) || 10;
+            autoClickCost = parseInt(localStorage.getItem('autoClickCost')) || 100;
+            document.getElementById('score').innerText = score;
+            document.getElementById('buyButton').textContent = `Acheter Booster (${boosterCost} points)`;
+            document.getElementById('buyAutoClickButton').textContent = `Acheter Auto-Click (${autoClickCost} points)`;
+        });
+
+        function startAutoClick() {
+            autoClickInterval = setInterval(function() {
+                score++;
+                document.getElementById('score').innerText = score;
+            }, 1000); // Ajoute 1 point chaque seconde
+        }
+    </script>
+</body>
+</html>
